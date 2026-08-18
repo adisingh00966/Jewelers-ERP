@@ -1,0 +1,36 @@
+{
+  "summary": "Phase-2 backend + frontend regression. Added /app/backend/tests/test_phase2.py with 15 tests covering Suppliers, Purchases (auto stock-in + auto product-create + role gating), Sales Returns, Purchase Returns (stock reduce + insufficient block + role gating), Girvi full lifecycle (create/pay/release, validation, search, status filter, summary, dashboard girvi KPIs) and Shop Info (Vaishno Jewelers + Khairetwa Chauraha address). All 15 pass (100%). Playwright verified: login all roles, sidebar shows 'Vaishno Jewelers', dashboard Girvi KPI row (Active, Outstanding, Due Soon, Overdue) present, 4 seeded girvi accounts show correct live statuses (Active / Due Soon / Overdue / Partially Paid; Ramesh Yadav's GRV-2026-101 is Partially Paid after the earlier interest-only payment, confirming interest-first payment logic), search + status filter work, detail modal opens with pay/type/make-payment/release controls, release blocked while outstanding>0 (alert), suppliers list has 5+ seeded, add-supplier works, supplier detail modal shows Total Purchases / Outstanding / Purchase Ledger, Purchases page has New/History tabs, history table renders, Sales Returns and Purchase Returns pages load. Accountant CAN open Record Purchase form (backend allows). Sales role CANNOT create purchase/purchase-return (backend 403 confirmed in API tests).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Sidebar (sales role)", "issues": ["nav-purchases, nav-purchase-returns and nav-suppliers are visible to the 'sales' role even though the backend correctly returns 403 on POST /purchases and POST /purchase-returns. UX gap: either hide these nav entries for sales role or show a read-only banner on those pages. (Similar pattern to nav-users flagged in iteration 1.)"]},
+      {"screen": "Supplier detail modal", "issues": ["Modal has an 'X' close icon but no data-testid on the modal container or close button; ESC key does not close it (same modal UX as flagged in iteration 1). Backdrop click also doesn't close it while purchases table below the overlay causes downstream nav clicks to be intercepted until the modal is closed via the X."]},
+      {"screen": "Dashboard numeric stats", "issues": ["Prompt asked stat values to render in 'normal (Manrope)' font, but Card component still uses `text-2xl font-bold` in /app/frontend/src/pages/Dashboard.js line 13. Bold is still applied — verify if this is the intended styling change."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_phase2.py",
+    "/app/test_reports/pytest/phase2_results.xml"
+  ],
+  "action_items": [
+    "(UX) Hide nav-purchases, nav-purchase-returns, nav-suppliers from 'sales' role in Layout.js (add roles: ['admin','manager','accountant']).",
+    "(UX) Add data-testid to supplier detail modal + close button; support ESC/backdrop close for all modals (Girvi/Supplier/Product/User).",
+    "(Verify) Dashboard stat values still render with font-bold — confirm whether the 'normal Manrope' change was applied where intended or if `font-bold` should be removed from Card in Dashboard.js line 13."
+  ],
+  "critical_code_review_comments": [
+    "server.py girvi_release accepts a `force=True` query param that lets admin close an account with outstanding>0 — no audit log annotation of the forced close; consider recording forced_close=True in the release audit details.",
+    "PurchaseItem.sku auto-generation fallback `it.name[:3].upper() + str(count) + str(len(items_out))` can produce collisions on concurrent purchases with similar item names; consider using uuid4 hex suffix to guarantee uniqueness.",
+    "girvi_payment does NOT persist rounding on outstanding_principal when principal_portion floors below 0.01 — currently rounds to 2dp which is fine but the `round(new_int_paid, 2)` uses the pre-add value; check for tiny FP drifts on repeated payments (not observed in tests but worth a note)."
+  ],
+  "updated_files": ["/app/backend/tests/test_phase2.py"],
+  "success_rate": {"backend": "100% (15/15 new phase-2 tests; phase-1 suite unchanged)", "frontend": "100% of new flows verified"},
+  "seed_data_creation": "Backend tests created TEST_ prefixed suppliers, purchases, purchase-returns, sale-returns, girvi accounts (all cleaned by leaving them prefixed for identification; no destructive edits to seed). Frontend UI created 1 TEST_UI supplier and 1 TEST_UI_Girvi account visible in Suppliers/Girvi lists (see GRV-2026-105/106/107).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Admin adisingh00966@gmail.com/admin123; manager/sales/accounts @shop.com / password123",
+  "context_for_next_testing_agent": "Phase-2 backend tests live in /app/backend/tests/test_phase2.py — safe as regression. Frontend testids per review request work correctly. Products has no GET /products/{id}; use GET /products list + filter by id (helper _get_product in test_phase2.py). Settings endpoint is /api/settings (not /settings/shop). Only open non-blocker items: sales-role sidebar visibility for purchases/purchase-returns/suppliers, dashboard stat font-bold vs Manrope-normal, modal ESC/backdrop close on supplier modal.",
+  "rca_of_the_issue": "N/A — no failing tests. Non-blocker UX items only."
+}

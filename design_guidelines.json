@@ -1,0 +1,95 @@
+{
+  "theme": "hybrid_fullstack",
+  "archetype": "Luxury & Swiss Data Clarity (Warm Ivory, Deep Emerald, & Gold)",
+  "description": "A premium, production-ready ERP/dashboard for an Indian Gold & Silver Jewellery Shop. The design balances the luxurious, high-end feel of a jewellery brand with the strict data clarity required for billing, inventory, and rate management.",
+  "typography": {
+    "fonts": [
+      {
+        "role": "headings",
+        "family": "Playfair Display",
+        "weight": "400, 600, 700",
+        "usage": "Brand logo, Login screen headings, Dashboard main titles, Invoice headers."
+      },
+      {
+        "role": "body_and_data",
+        "family": "Manrope",
+        "weight": "400, 500, 600, 700",
+        "usage": "All UI elements, data tables, billing calculator, sidebar navigation, form inputs."
+      }
+    ],
+    "guidelines": [
+      "NEVER use generic fonts like Inter, Roboto, or Open Sans for headings.",
+      "Use tracking-tight for large headings and tracking-[0.2em] uppercase for small overlines/labels.",
+      "Ensure strong typographic hierarchy. H1 max text-4xl or text-5xl on desktop."
+    ]
+  },
+  "colors": {
+    "light": {
+      "background": "#FBFBF9",
+      "surface": "#FFFFFF",
+      "sidebar": "#06271F",
+      "primary": "#06271F",
+      "primary_foreground": "#FFFFFF",
+      "accent_gold": "#D4AF37",
+      "text_main": "#1A1A1A",
+      "text_muted": "#666666",
+      "border": "#E5E5E5"
+    },
+    "dark": {
+      "background": "#0A0F0D",
+      "surface": "#121A17",
+      "sidebar": "#041410",
+      "primary": "#D4AF37",
+      "primary_foreground": "#000000",
+      "accent_gold": "#D4AF37",
+      "text_main": "#F3F4F6",
+      "text_muted": "#A1A1AA",
+      "border": "#27272A"
+    },
+    "guidelines": [
+      "Use Deep Emerald (#06271F) as the brand anchor. It conveys wealth and stability.",
+      "Use Gold (#D4AF37) exclusively for key highlights, live rates, and primary actions.",
+      "Never use pure black or pure white. Tint backgrounds slightly for warmth.",
+      "Ensure APCA/WCAG contrast for all text, especially gold text on light backgrounds (use darker gold or background contrast)."
+    ]
+  },
+  "visual_enhancers": {
+    "surfaces": "Use 'Grid Borders' (1px crisp borders) for dense data tables and 'Flat Solid' with subtle 4px radius for dashboard cards. Avoid muddy glassmorphism on data-heavy billing screens.",
+    "shadows": "Minimal ambient shadows. Rely on 1px borders to separate elements.",
+    "motion": "Fast, subtle micro-interactions (0.15s ease). Hover states on rows must be distinct (e.g., bg-stone-100)."
+  },
+  "layouts": {
+    "dashboard": "Fixed left sidebar (collapsible on mobile), top header for global search & live gold/silver rates, fluid main content area.",
+    "grid": "Bento-style or high-density grids for KPIs (e.g., Today's Sales, Live Rates). 12-column system for complex forms like the Billing Calculator.",
+    "spacing": "Dense but breathable. p-4 or p-6 for cards. Forms should have gap-4."
+  },
+  "components": {
+    "instructions_to_main_agent": [
+      "Use Shadcn UI for Tabs, Tables, Dialogs, Select, Input, Form, and Sonner.",
+      "Customize Shadcn components to use Manrope and the Emerald/Gold color palette.",
+      "Avoid excessive rounded corners; use rounded-md or rounded-sm for a sharp, precise look suitable for finance/billing.",
+      "Billing Calculator must be highly usable with clear breakdown of Weight, Purity, Wastage, Making Charges, and GST."
+    ]
+  },
+  "media": {
+    "image_urls": {
+      "login_background": {
+        "url": "https://images.unsplash.com/photo-1640183298005-3a4497cc6a37?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwzfHxpbmRpYW4lMjBnb2xkJTIwamV3ZWxsZXJ5JTIwbmVja2xhY2V8ZW58MHx8fHwxNzg2NDQyODAxfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Luxurious gold necklace set, ideal for the login screen background overlay."
+      },
+      "invoice_logo_placeholder": {
+        "url": "https://images.unsplash.com/flagged/photo-1570055349452-29232699cc63?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBnb2xkJTIwamV3ZWxsZXJ5JTIwbmVja2xhY2V8ZW58MHx8fHwxNzg2NDQyODAxfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Heavy Indian gold jewellery piece, can be used abstractly for branding."
+      }
+    }
+  },
+  "universal_guidelines_for_main_agent": [
+    "Do not use transparent backgrounds for dropdowns, overlays, or headers.",
+    "Add 'data-testid' to all interactive elements (buttons, inputs, menu items).",
+    "Implement Recharts for sales graphs on the dashboard.",
+    "Include both Light and Dark mode toggle, defaulting to Light mode for high visibility in retail environments.",
+    "Ensure the printable invoice (A4/A5) strips away UI elements (sidebar/header) using print-specific CSS classes (@media print).",
+    "Do not center-align the entire app container.",
+    "Never use placeholder URLs; rely on the provided image URLs or CSS styling."
+  ]
+}

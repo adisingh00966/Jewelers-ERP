@@ -1,0 +1,33 @@
+{
+  "summary": "First testing pass on the Jewellery Shop Management app. Backend pytest suite (29 tests) covering auth, rates, customers, products, sales math, dashboard, reports, settings, users role-gating and audit logs — all 29 passed (100%). Frontend Playwright validation of login (all 4 roles), dashboard KPIs, Metal Rates, Inventory search/filter/validation, Customers, full New Sale flow (customer search, barcode add, live math, payments, complete → invoice), Invoice rendering, Sales History, Reports presets/CSV, Settings, Users role visibility — all core flows work. Frontend/backend math match exactly for the sample gold 22K item (Subtotal ₹62,924.80, GST ₹1,887.74, Grand ₹64,812.54).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "New Sale / Invoice", "issues": ["Overpayment shows 'Balance Due: ₹-5,187' (negative). Better UX: show 'Change/Return: ₹5,187' and clamp Balance Due to 0."]},
+      {"screen": "Settings (non-admin)", "issues": ["No visible 'read-only' indicator for sales/accountant — Save button is correctly hidden and fields remain editable in the DOM (not persisted). Consider disabling inputs and adding a 'Read only — admin can edit' banner."]},
+      {"screen": "Layout sidebar", "issues": ["'Users' nav link is shown to all roles; sales/accountant see the page (empty) despite backend gating. Hide nav-users for non-admin/manager."]},
+      {"screen": "Modals (Product/User)", "issues": ["ESC key does not close modals — only backdrop click or Cancel button. Minor UX."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "(Optional/UX) In NewSale summary and Invoice, when received > grand_total, display 'Change: ₹X' instead of negative Balance Due.",
+    "(Optional) Hide nav-users sidebar entry for non-admin/manager and add read-only visual state on Settings for non-admins.",
+    "(Optional) Allow ESC to close modals."
+  ],
+  "critical_code_review_comments": [
+    "seed() runs on every startup; the seed sales block uses random data (compute_item with hardcoded 6820/95 rates) — deterministic across restarts only because it early-exits when sales exist. OK for demo.",
+    "PUT /api/customers/{cid} doesn't guard against duplicate mobile when editing (only POST does). Low priority.",
+    "compute_item / calcItem duplicate math between backend and frontend; keep in sync going forward. Currently identical."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py", "/app/backend/tests/__init__.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Tests created a few TEST_ prefixed products/customers/users via API; app seed already provided 4 users, 10 customers, 20 products, 15 sample sales.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Admin adisingh00966@gmail.com/admin123; manager@shop.com, sales@shop.com, accounts@shop.com / password123",
+  "context_for_next_testing_agent": "Backend test suite at /app/backend/tests/backend_test.py covers all core endpoints and role gating; safe to run as regression. Frontend testids follow: nav-{dashboard,new-sale,sales-history,inventory,customers,metal-rates,reports,settings,users}, logout-btn, rate-gold_22k etc, sale-customer-search, sale-barcode, sale-product-search, item-{i}-{field}, sale-discount, sale-gst, pay-{cash|upi|card|bank}, complete-sale, print-invoice, whatsapp-invoice, invoice-doc, product-search, filter-metal, add-product, save-product, pf-*, product-row-{sku}, edit-{sku}, add-user, save-user, user-row-{email}, uf-*, sales-search, sale-row-{invoice}, export-sales, export-report, preset-{today|week|month|lastmonth|yesterday}, set-{field}. Only known non-blocker UX items: Balance Due negative on overpay, no read-only banner on settings for non-admin (Save hidden), nav-users visible to all roles.",
+  "rca_of_the_issue": "N/A — no failing tests."
+}
