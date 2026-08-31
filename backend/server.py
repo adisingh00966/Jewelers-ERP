@@ -121,8 +121,8 @@ async def login(body: LoginReq, response: Response):
     if user.get("disabled"):
         raise HTTPException(403, "Account disabled")
     token = create_access_token(str(user["_id"]), email, user["role"])
-    response.set_cookie("access_token", token, httponly=True, secure=False,
-                        samesite="lax", max_age=43200, path="/")
+    response.set_cookie("access_token", token, httponly=True, secure=True,
+                        samesite="none", max_age=43200, path="/")
     await db.users.update_one({"_id": user["_id"]}, {"$set": {"last_login": now_utc().isoformat()}})
     return {"user": clean(user), "token": token}
 
