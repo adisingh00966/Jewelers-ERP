@@ -94,6 +94,24 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
 
 # ---------- auth ----------
+
+from passlib.context import CryptContext
+temp_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+@api.get("/create-admin")
+async def create_admin():
+    exists = await db.users.find_one({"email": "admin@gmail.com"})
+    if exists:
+        return {"msg": "Admin pehle se bana hua hai!"}
+    
+    await db.users.insert_one({
+        "email": "admin@gmail.com",
+        "password_hash": temp_pwd_context.hash("123456"),
+        "role": "admin",
+        "disabled": False
+    })
+    return {"msg": "SUCCESS! Email: admin@gmail.com | Password: 123456"}
+
 @api.post("/auth/login")
 async def login(body: LoginReq, response: Response):
     email = body.email.lower().strip()
