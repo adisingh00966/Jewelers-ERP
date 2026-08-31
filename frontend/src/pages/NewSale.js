@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { inr } from "@/lib/api";
 import { toast } from "sonner";
-import { Plus, Trash2, Search, Scan } from "lucide-react";
+import { Plus, Trash2, Search } from "lucide-react";
 
 function calcItem(it) {
   const net = +(it.gross_weight - it.stone_weight).toFixed(3);
