@@ -1198,7 +1198,7 @@ async def startup():
 
 app.include_router(api)
 app.add_middleware(CORSMiddleware, allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=os.environ.get('CORS_ORIGINS', 'https://flourishing-starlight-8599db.netlify.app/').split(','),
     allow_methods=["*"], allow_headers=["*"])
 logging.basicConfig(level=logging.INFO)
 
