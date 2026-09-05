@@ -1,8 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import axios from 'axios';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/index.css";
 import App from "@/App";
+
+axios.defaults.withCredentials = true; // <-- Yeh line sabhi axios requests ke sath automatically cookie bhej degi
 
 const queryClient = new QueryClient({
   defaultOptions: {
